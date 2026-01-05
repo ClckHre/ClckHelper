@@ -8,7 +8,9 @@ BrainfuckManager.placements = {
     name = "BrainfuckManager",
     data = {
         flag="brainfuck_flag",
-        alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        tape_size=30000,
+        tape_limit=27,
+        alphabet=" ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     }
 }
 
