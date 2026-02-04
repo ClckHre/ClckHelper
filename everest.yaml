@@ -1,0 +1,6 @@
+- Name: ClckHelper
+  Version: 0.1.0
+  DLL: Code/bin/ClckHelper.dll
+  Dependencies:
+    - Name: EverestCore
+      Version: 1.5935.0
