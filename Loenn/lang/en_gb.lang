@@ -1,0 +1,3 @@
+entities.ClckHelper/InputTempleGate.placements.name.InputTempleGate=Arbitrary Input Temple Gate
+entities.ClckHelper/EntityNearbyGate.placements.name.EntityNearbyGate=Arbitrary Entity Temple Gate
+entities.ClckHelper/PlayerNearbyGate.placements.name.PlayerNearbyGate=Player Temple Gate
