@@ -1,2 +1,2 @@
 # ClckHelper
-Replace with your mod's readme!
+A very unfinished Celeste mod
