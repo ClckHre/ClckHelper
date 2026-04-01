@@ -43,7 +43,7 @@ public class EntityNearbyGate : BaseTempleGate
 			if (entity == null) continue;
 			if (!EntityIsNearby)
 			{
-				EntityIsNearby = Vector2.Distance(NearbyCheckFrom, entity.Center) < radius;
+				EntityIsNearby = Vector2.Distance(Position + new Vector2(base.Width / 2f, closedHeight / 2), entity.Center) < radius;
 				if (EntityIsNearby) break;
 			}
 		}

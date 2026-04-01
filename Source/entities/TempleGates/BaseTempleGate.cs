@@ -8,12 +8,8 @@ using System.Runtime.CompilerServices;
 namespace Celeste.Mod.ClckHelper.Entities;
 
 public class BaseTempleGate : Solid {
-	public string LevelID;
-
-	public bool ClaimedByASwitch;
-
-	private bool theoGate;
-
+	private string open_sound;
+	private string close_sound;
 	public int closedHeight;
 
 	private Sprite sprite;
@@ -25,23 +21,22 @@ public class BaseTempleGate : Solid {
 	private float drawHeightMoveSpeed;
 	public bool inverted = false;
 	public bool openState;
-	public Vector2 NearbyCheckFrom;
 
 	public BaseTempleGate(EntityData data, Vector2 offset) : base(data.Position + offset, 8f, 1, safe: true)
 	{
 		string spriteName = data.String("sprite", "TempleGate_default");
 		closedHeight = data.Int("height", 40);
 		inverted = data.Bool("inverted", false);
+		open_sound = data.String("open_sound", "event:/game/05_mirror_temple/gate_main_open");
+		close_sound = data.String("close_sound", "event:/game/05_mirror_temple/gate_main_close");
 
 
-		LevelID = data.Level.Name;
+
 		Add(sprite = GFX.SpriteBank.Create(spriteName));
 		sprite.X = base.Collider.Width / 2f;
 		sprite.Play("idle");
 		Add(shaker = new Shaker(on: false));
 		base.Depth = -9000;
-		theoGate = spriteName.Equals("TempleGate_theo", StringComparison.InvariantCultureIgnoreCase);
-		NearbyCheckFrom = Position + new Vector2(base.Width / 2f, closedHeight / 2);
 	}
 
 	public bool get_openState() {
@@ -90,7 +85,7 @@ public class BaseTempleGate : Solid {
 
 #region base methods (not respecting inverted flag)
 	public void base_Open() {
-		Audio.Play(theoGate ? "event:/game/05_mirror_temple/gate_theo_open" : "event:/game/05_mirror_temple/gate_main_open", Position);
+		Audio.Play(open_sound, Position);
 		drawHeightMoveSpeed = 200f;
 		drawHeight = base.Height;
 		shaker.ShakeFor(0.2f, removeOnFinish: false);
@@ -100,7 +95,7 @@ public class BaseTempleGate : Solid {
 	}
 
 	public void base_Close() {
-		Audio.Play(theoGate ? "event:/game/05_mirror_temple/gate_theo_close" : "event:/game/05_mirror_temple/gate_main_close", Position);
+		Audio.Play(close_sound, Position);
 		drawHeightMoveSpeed = 300f;
 		drawHeight = Math.Max(4f, base.Height);
 		shaker.ShakeFor(0.2f, removeOnFinish: false);

@@ -39,7 +39,7 @@ public class PlayerNearbyGate : BaseTempleGate
 		foreach (T entity in base.Scene.Tracker.GetEntities<T>()) {
 			if (entity != null && !TIsNearby)
 			{
-				TIsNearby = Vector2.Distance(NearbyCheckFrom, entity.Center) < radius;
+				TIsNearby = Vector2.Distance(Position + new Vector2(base.Width / 2f, closedHeight / 2), entity.Center) < radius;
 				if (TIsNearby) break;
 			}
 		}
