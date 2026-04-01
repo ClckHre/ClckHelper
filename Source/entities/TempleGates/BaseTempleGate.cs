@@ -122,14 +122,14 @@ public class BaseTempleGate : Solid {
 	}
 	public void base_LongOpen() {
 		sprite.Play("open");
-		Alarm.Set(this, 0.2f, [MethodImpl(MethodImplOptions.NoInlining)] () => {
+		Alarm.Set(this, 0.2f, () => {
 			shaker.ShakeFor(0.2f, removeOnFinish: false);
 			Alarm.Set(this, 0.2f, Open);
 		});
 	}
 	public void base_LongClose() {
 		sprite.Play("hit");
-		Alarm.Set(this, 0.2f, [MethodImpl(MethodImplOptions.NoInlining)] () => {
+		Alarm.Set(this, 0.2f, () => {
 			shaker.ShakeFor(0.2f, removeOnFinish: false);
 			Alarm.Set(this, 0.2f, Close);
 		});
@@ -144,7 +144,6 @@ public class BaseTempleGate : Solid {
 		StartClosed();
 	}
 
-	[MethodImpl(MethodImplOptions.NoInlining)]
 	public override void Update()
 	{
 		base.Update();
@@ -155,7 +154,6 @@ public class BaseTempleGate : Solid {
 		}
 	}
 
-	[MethodImpl(MethodImplOptions.NoInlining)]
 	public override void Render()
 	{
 		Vector2 vector = new Vector2(Math.Sign(shaker.Value.X), 0f);
