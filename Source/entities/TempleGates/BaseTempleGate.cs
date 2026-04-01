@@ -136,36 +136,6 @@ public class BaseTempleGate : Solid {
 	}
 #endregion
 
-#region IsNearby methods
-	public bool IsNearby<T>(float radius=64f) where T : Entity
-	{
-		bool TIsNearby = false;
-		foreach (T entity in base.Scene.Tracker.GetEntities<T>()) {
-			if (entity != null && !TIsNearby)
-			{
-				TIsNearby = Vector2.Distance(NearbyCheckFrom, entity.Center) < radius;
-				if (TIsNearby) break;
-			}
-		}
-		return TIsNearby;
-	}
-	public bool IsNearby(string Name, float radius=64f)
-	{
-		//EntityRegistry.GetKnownSidsFromType()
-		
-		bool EntityIsNearby = false;
-		foreach (Entity entity in base.Scene.FindEntitiesWithSid(Name)) {
-			if (entity == null) continue;
-			if (!EntityIsNearby)
-			{
-				EntityIsNearby = Vector2.Distance(NearbyCheckFrom, entity.Center) < radius;
-				if (EntityIsNearby) break;
-			}
-		}
-		return EntityIsNearby;
-	}
-#endregion
-
 #region basic entity methods
 	public override void Awake(Scene scene)
 	{

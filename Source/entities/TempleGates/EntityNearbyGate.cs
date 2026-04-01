@@ -33,4 +33,20 @@ public class EntityNearbyGate : BaseTempleGate
         if (!IsNearby(EntitySID, close_radius) && get_openState()) Close();
         if (IsNearby(EntitySID, open_radius) && !get_openState()) Open();
     }
+
+	public bool IsNearby(string Name, float radius=64f)
+	{
+		//EntityRegistry.GetKnownSidsFromType()
+		
+		bool EntityIsNearby = false;
+		foreach (Entity entity in base.Scene.FindEntitiesWithSid(Name)) {
+			if (entity == null) continue;
+			if (!EntityIsNearby)
+			{
+				EntityIsNearby = Vector2.Distance(NearbyCheckFrom, entity.Center) < radius;
+				if (EntityIsNearby) break;
+			}
+		}
+		return EntityIsNearby;
+	}
 }

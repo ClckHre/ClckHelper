@@ -32,4 +32,17 @@ public class PlayerNearbyGate : BaseTempleGate
         if (IsNearby<Player>(open_radius) && !get_openState()) Open();
 
     }
+
+    public bool IsNearby<T>(float radius=64f) where T : Entity
+	{
+		bool TIsNearby = false;
+		foreach (T entity in base.Scene.Tracker.GetEntities<T>()) {
+			if (entity != null && !TIsNearby)
+			{
+				TIsNearby = Vector2.Distance(NearbyCheckFrom, entity.Center) < radius;
+				if (TIsNearby) break;
+			}
+		}
+		return TIsNearby;
+	}
 }
