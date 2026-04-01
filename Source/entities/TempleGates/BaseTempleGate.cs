@@ -12,6 +12,8 @@ public class BaseTempleGate : Solid {
 	private string close_sound;
 	public int closedHeight;
 
+	public enum Direction {DOWN, LEFT, UP, RIGHT}
+	public Direction direction;
 	private Sprite sprite;
 
 	private Shaker shaker;
@@ -29,10 +31,13 @@ public class BaseTempleGate : Solid {
 		inverted = data.Bool("inverted", false);
 		open_sound = data.String("open_sound", "event:/game/05_mirror_temple/gate_main_open");
 		close_sound = data.String("close_sound", "event:/game/05_mirror_temple/gate_main_close");
-
-
+		direction = Direction.UP;
+		
 
 		Add(sprite = GFX.SpriteBank.Create(spriteName));
+
+		sprite.Rotation = (float)Math.PI/2 * (float)direction;
+
 		sprite.X = base.Collider.Width / 2f;
 		sprite.Play("idle");
 		Add(shaker = new Shaker(on: false));
