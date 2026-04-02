@@ -12,6 +12,8 @@ public class BaseTempleGate : Solid {
 	private string close_sound;
 	public int closedHeight;
 
+	public enum Direction {DOWN, LEFT, UP, RIGHT}
+	public Direction direction;
 	private Sprite sprite;
 
 	private Shaker shaker;
@@ -21,7 +23,6 @@ public class BaseTempleGate : Solid {
 	private float drawHeightMoveSpeed;
 	public bool inverted = false;
 	public bool openState;
-
 	public BaseTempleGate(EntityData data, Vector2 offset) : base(data.Position + offset, 8f, 1, safe: true)
 	{
 		string spriteName = data.String("sprite", "TempleGate_default");
@@ -29,11 +30,21 @@ public class BaseTempleGate : Solid {
 		inverted = data.Bool("inverted", false);
 		open_sound = data.String("open_sound", "event:/game/05_mirror_temple/gate_main_open");
 		close_sound = data.String("close_sound", "event:/game/05_mirror_temple/gate_main_close");
-
-
+		direction = Enum.Parse<Direction>(data.String("direction", "DOWN"));
 
 		Add(sprite = GFX.SpriteBank.Create(spriteName));
-		sprite.X = base.Collider.Width / 2f;
+		sprite.Rotation = (float)Math.PI/2 * (float)direction;
+
+		if (direction == Direction.DOWN || direction == Direction.UP) {
+			base.Collider.Width = 8f;
+			sprite.X = base.Collider.Width / 2f;
+		}
+		else {
+			base.Collider.Height = 8f;
+			sprite.Y = base.Collider.Height / 2f;
+		}
+
+
 		sprite.Play("idle");
 		Add(shaker = new Shaker(on: false));
 		base.Depth = -9000;
@@ -87,7 +98,7 @@ public class BaseTempleGate : Solid {
 	public void base_Open() {
 		Audio.Play(open_sound, Position);
 		drawHeightMoveSpeed = 200f;
-		drawHeight = base.Height;
+		//drawHeight = base.Height;
 		shaker.ShakeFor(0.2f, removeOnFinish: false);
 		SetHeight(0);
 		sprite.Play("open");
@@ -97,7 +108,7 @@ public class BaseTempleGate : Solid {
 	public void base_Close() {
 		Audio.Play(close_sound, Position);
 		drawHeightMoveSpeed = 300f;
-		drawHeight = Math.Max(4f, base.Height);
+		//drawHeight = Math.Max(4f, base.Height);
 		shaker.ShakeFor(0.2f, removeOnFinish: false);
 		SetHeight(closedHeight);
 		sprite.Play("hit");
@@ -135,14 +146,17 @@ public class BaseTempleGate : Solid {
 	public override void Awake(Scene scene)
 	{
 		base.Awake(scene);
-		drawHeight = Math.Max(4f, base.Height);
+		if (direction == Direction.DOWN || direction == Direction.UP) drawHeight = Math.Max(4f, base.Height);
+		else drawHeight = Math.Max(4f, base.Width);
 		StartClosed();
 	}
-
 	public override void Update()
 	{
 		base.Update();
-		float num = Math.Max(4f, base.Height);
+		Console.WriteLine($"Top is {base.Collider.Top}, Bottom is {base.Collider.Bottom}, AbsouluteBottom is {base.Collider.AbsoluteBottom}, Height is {base.Collider.Height}");
+		float num;
+		if (direction == Direction.DOWN || direction == Direction.UP) num = Math.Max(4f, base.Height);
+		else num = Math.Max(4f, base.Width);
 		if (drawHeight != num)
 		{
 			drawHeight = Calc.Approach(drawHeight, num, drawHeightMoveSpeed * Engine.DeltaTime);
@@ -151,16 +165,24 @@ public class BaseTempleGate : Solid {
 
 	public override void Render()
 	{
-		Vector2 vector = new Vector2(Math.Sign(shaker.Value.X), 0f);
-		Draw.Rect(base.X - 2f, base.Y - 8f, 14f, 10f, Color.Black);
-		sprite.DrawSubrect(Vector2.Zero + vector, new Rectangle(0, (int)(sprite.Height - drawHeight), (int)sprite.Width, (int)drawHeight));
+		if (direction == Direction.DOWN || direction == Direction.UP) {
+			Vector2 vector = new Vector2(Math.Sign(shaker.Value.X), 0f);
+			Draw.Rect(base.X - 2f, base.Y - 8f, 14f, 10f, Color.Black);
+			sprite.DrawSubrect(Vector2.Zero + vector, new Rectangle(0, (int)(sprite.Height - drawHeight), (int)sprite.Width, (int)drawHeight));
+		}
+		else {
+			Vector2 vector = new Vector2(Math.Sign(shaker.Value.X), 0f);
+			Draw.Rect(base.X - 2f, base.Y - 8f, 14f, 10f, Color.Black);
+			sprite.DrawSubrect(Vector2.Zero + vector, new Rectangle(0, (int)(sprite.Height - drawHeight), (int)sprite.Width, (int)drawHeight));
+		}
 	}
 #endregion
 
-	public void SetHeight(int height) {
+	private void SetHeightDOWN(int height) {
 		if ((float)height < base.Collider.Height)
 		{
 			base.Collider.Height = height;
+			base.Collider.Top = 0;
 			return;
 		}
 		float y = base.Y;
@@ -169,10 +191,94 @@ public class BaseTempleGate : Solid {
 		{
 			base.Y -= 64f - base.Collider.Height;
 			base.Collider.Height = 64f;
+			base.Collider.Top = 0;
 		}
 		MoveVExact(height - num);
 		base.Y = y;
 		base.Collider.Height = height;
+		base.Collider.Top = 0;
+	}
+
+	private void SetHeightUP(int height) {
+		if ((float)height < base.Collider.Height)
+		{
+			base.Collider.Height = height;
+			base.Collider.Bottom = 0;
+			return;
+		}
+		float y = base.Y;
+		int num = (int)base.Collider.Height;
+		if (base.Collider.Height < 64f)
+		{
+			base.Y += 64f - base.Collider.Height;
+			base.Collider.Height = 64f;
+			base.Collider.Bottom = 0;
+		}
+		MoveVExact(num - height);
+		base.Y = y;
+		base.Collider.Height = height;
+		base.Collider.Bottom = 0;
+
+
+	}
+	private void SetHeightRIGHT(int height) {
+		if ((float)height < base.Collider.Width)
+		{
+			base.Collider.Width = height;
+			base.Collider.Left = 0;
+			return;
+		}
+		float x = base.X;
+		int num = (int)base.Collider.Width;
+		if (base.Collider.Width < 64f)
+		{
+			base.X -= 64f - base.Collider.Width;
+			base.Collider.Width = 64f;
+			base.Collider.Left = 0;
+		}
+		MoveHExact(height - num);
+		base.X = x;
+		base.Collider.Width = height;
+		base.Collider.Left = 0;
+	}
+	private void SetHeightLEFT(int height) {
+		if ((float)height < base.Collider.Width)
+		{
+			base.Collider.Width = height;
+			base.Collider.Right = 0;
+			return;
+		}
+		float x = base.X;
+		int num = (int)base.Collider.Width;
+		if (base.Collider.Width < 64f)
+		{
+			base.X -= 64f - base.Collider.Width;
+			base.Collider.Width = 64f;
+			base.Collider.Right = 0;
+		}
+		MoveHExact(num - height);
+		base.X = x;
+		base.Collider.Width = height;
+		base.Collider.Right = 0;
+	}
+	public void SetHeight(int height) {
+		switch (direction) {
+			case Direction.DOWN:
+				SetHeightDOWN(height);
+				break;
+			case Direction.UP:
+				SetHeightUP(height);
+				break;
+			case Direction.RIGHT:
+				SetHeightRIGHT(height);
+				break;
+			case Direction.LEFT:
+				SetHeightLEFT(height);
+				break;
+		}
+
+
+
 	}
 
 }
