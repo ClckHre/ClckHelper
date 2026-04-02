@@ -14,6 +14,12 @@ local textures = {
 
 local textureOptions = {}
 
+local directionOptions = {
+    "DOWN",
+    "LEFT",
+    "UP",
+    "RIGHT"
+}
 
 for texture, _ in pairs(textures) do
     textureOptions[utils.titleCase(texture)] = texture
@@ -26,6 +32,10 @@ InputTempleGate.fieldInformation = {
     sprite = {
         options = textureOptions,
         editable = true
+    },
+    direction = {
+        options = directionOptions,
+        editable = false
     }
 }
 InputTempleGate.placements = {
@@ -36,7 +46,8 @@ InputTempleGate.placements = {
         sprite = "TempleGate_default",
         inverted=false,
         controller_button="Y",
-        key="R"
+        key="R",
+        direction="DOWN"
     }
 }
 

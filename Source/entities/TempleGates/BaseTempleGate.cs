@@ -30,7 +30,7 @@ public class BaseTempleGate : Solid {
 		inverted = data.Bool("inverted", false);
 		open_sound = data.String("open_sound", "event:/game/05_mirror_temple/gate_main_open");
 		close_sound = data.String("close_sound", "event:/game/05_mirror_temple/gate_main_close");
-		direction = Direction.LEFT;
+		direction = Enum.Parse<Direction>(data.String("direction", "DOWN"));
 
 		Add(sprite = GFX.SpriteBank.Create(spriteName));
 		sprite.Rotation = (float)Math.PI/2 * (float)direction;
