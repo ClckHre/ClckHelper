@@ -14,6 +14,12 @@ local textures = {
 
 local textureOptions = {}
 
+local directionOptions = {
+    "DOWN",
+    "LEFT",
+    "UP",
+    "RIGHT"
+}
 
 for texture, _ in pairs(textures) do
     textureOptions[utils.titleCase(texture)] = texture
@@ -26,6 +32,10 @@ PlayerNearbyGate.fieldInformation = {
     sprite = {
         options = textureOptions,
         editable = true
+    },
+    direction = {
+        options = directionOptions,
+        editable = false
     }
 }
 PlayerNearbyGate.placements = {
@@ -36,7 +46,8 @@ PlayerNearbyGate.placements = {
         sprite = "TempleGate_default",
         open_radius=64,
         close_radius=80,
-        inverted=false
+        inverted=false,
+        direction="DOWN"
     }
 }
 

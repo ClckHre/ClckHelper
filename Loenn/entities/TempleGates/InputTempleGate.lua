@@ -53,12 +53,25 @@ InputTempleGate.placements = {
 
 
 
+
 function InputTempleGate.sprite(room, entity)
+    local direction = entity.direction or "DOWN"
     local variant = entity.sprite or "default"
     local texture = textures[variant] or textures["default"]
     local sprite = drawableSprite.fromTexture(texture, entity)
     local height = entity.height or 48
-
+    if direction == "UP" then
+        sprite.rotation = math.pi
+        sprite:addPosition(0, 16)
+    elseif direction == "RIGHT" then
+        sprite.rotation = -math.pi/2
+        sprite:addPosition(-12, 8)
+    elseif direction == "LEFT" then
+        sprite.rotation = math.pi/2
+        sprite:addPosition(4, 8)
+    else
+        sprite.rotation = 0
+    end
     -- Weird offset from the code, justifications are from sprites.xml
     sprite:setJustification(0.5, 0.0)
     sprite:addPosition(4, height - 48)
