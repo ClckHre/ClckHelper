@@ -165,16 +165,26 @@ public class BaseTempleGate : Solid {
 
 	public override void Render()
 	{
-		if (direction == Direction.DOWN || direction == Direction.UP) {
-			Vector2 vector = new Vector2(Math.Sign(shaker.Value.X), 0f);
-			Draw.Rect(base.X - 2f, base.Y - 8f, 14f, 10f, Color.Black);
-			sprite.DrawSubrect(Vector2.Zero + vector, new Rectangle(0, (int)(sprite.Height - drawHeight), (int)sprite.Width, (int)drawHeight));
+		Vector2 vector;
+		switch (direction) {
+			default:
+				vector = new Vector2(Math.Sign(shaker.Value.X), 0f);
+				Draw.Rect(base.X - 2f, base.Y - 8f, 14f, 10f, Color.Black);
+				break;
+			case Direction.UP:
+				vector = new Vector2(Math.Sign(shaker.Value.X), 0f);
+				Draw.Rect(base.X - 2f, base.Y, 14f, 10f, Color.Black);
+				break;
+			case Direction.RIGHT:
+				vector = new Vector2(0f ,Math.Sign(shaker.Value.Y));
+				Draw.Rect(base.X - 8f, base.Y - 2f, 10f, 14f, Color.Black);
+				break;
+			case Direction.LEFT:
+				vector = new Vector2(0f ,Math.Sign(shaker.Value.Y));
+				Draw.Rect(base.X, base.Y - 2f, 10f, 14f, Color.Black);
+				break;
 		}
-		else {
-			Vector2 vector = new Vector2(Math.Sign(shaker.Value.X), 0f);
-			Draw.Rect(base.X - 2f, base.Y - 8f, 14f, 10f, Color.Black);
-			sprite.DrawSubrect(Vector2.Zero + vector, new Rectangle(0, (int)(sprite.Height - drawHeight), (int)sprite.Width, (int)drawHeight));
-		}
+		sprite.DrawSubrect(Vector2.Zero + vector, new Rectangle(0, (int)(sprite.Height - drawHeight), (int)sprite.Width, (int)drawHeight));
 	}
 #endregion
 
@@ -182,7 +192,7 @@ public class BaseTempleGate : Solid {
 		if ((float)height < base.Collider.Height)
 		{
 			base.Collider.Height = height;
-			base.Collider.Top = 0;
+			base.Collider.Top = 0f;
 			return;
 		}
 		float y = base.Y;
@@ -191,19 +201,19 @@ public class BaseTempleGate : Solid {
 		{
 			base.Y -= 64f - base.Collider.Height;
 			base.Collider.Height = 64f;
-			base.Collider.Top = 0;
+			base.Collider.Top = 0f;
 		}
 		MoveVExact(height - num);
 		base.Y = y;
 		base.Collider.Height = height;
-		base.Collider.Top = 0;
+		base.Collider.Top = 0f;
 	}
 
 	private void SetHeightUP(int height) {
 		if ((float)height < base.Collider.Height)
 		{
 			base.Collider.Height = height;
-			base.Collider.Bottom = 0;
+			base.Collider.Bottom = 0f;
 			return;
 		}
 		float y = base.Y;
@@ -212,12 +222,12 @@ public class BaseTempleGate : Solid {
 		{
 			base.Y += 64f - base.Collider.Height;
 			base.Collider.Height = 64f;
-			base.Collider.Bottom = 0;
+			base.Collider.Bottom = 0f;
 		}
 		MoveVExact(num - height);
 		base.Y = y;
 		base.Collider.Height = height;
-		base.Collider.Bottom = 0;
+		base.Collider.Bottom = 0f;
 
 
 	}
@@ -225,7 +235,7 @@ public class BaseTempleGate : Solid {
 		if ((float)height < base.Collider.Width)
 		{
 			base.Collider.Width = height;
-			base.Collider.Left = 0;
+			base.Collider.Left = 0f;
 			return;
 		}
 		float x = base.X;
@@ -234,32 +244,32 @@ public class BaseTempleGate : Solid {
 		{
 			base.X -= 64f - base.Collider.Width;
 			base.Collider.Width = 64f;
-			base.Collider.Left = 0;
+			base.Collider.Left = 0f;
 		}
 		MoveHExact(height - num);
 		base.X = x;
 		base.Collider.Width = height;
-		base.Collider.Left = 0;
+		base.Collider.Left = 0f;
 	}
 	private void SetHeightLEFT(int height) {
 		if ((float)height < base.Collider.Width)
 		{
 			base.Collider.Width = height;
-			base.Collider.Right = 0;
+			base.Collider.Right = 0f;
 			return;
 		}
 		float x = base.X;
 		int num = (int)base.Collider.Width;
 		if (base.Collider.Width < 64f)
 		{
-			base.X -= 64f - base.Collider.Width;
+			base.X += 64f - base.Collider.Width;
 			base.Collider.Width = 64f;
-			base.Collider.Right = 0;
+			base.Collider.Right = 0f;
 		}
 		MoveHExact(num - height);
 		base.X = x;
 		base.Collider.Width = height;
-		base.Collider.Right = 0;
+		base.Collider.Right = 0f;
 	}
 	public void SetHeight(int height) {
 		switch (direction) {
