@@ -23,7 +23,6 @@ public class BaseTempleGate : Solid {
 	private float drawHeightMoveSpeed;
 	public bool inverted = false;
 	public bool openState;
-
 	public BaseTempleGate(EntityData data, Vector2 offset) : base(data.Position + offset, 8f, 1, safe: true)
 	{
 		string spriteName = data.String("sprite", "TempleGate_default");
@@ -143,10 +142,10 @@ public class BaseTempleGate : Solid {
 		drawHeight = Math.Max(4f, base.Height);
 		StartClosed();
 	}
-
 	public override void Update()
 	{
 		base.Update();
+		Console.WriteLine($"Top is {base.Collider.Top}, Bottom is {base.Collider.Bottom}, AbsouluteBottom is {base.Collider.AbsoluteBottom}, Height is {base.Collider.Height}");
 		float num = Math.Max(4f, base.Height);
 		if (drawHeight != num)
 		{
@@ -162,10 +161,11 @@ public class BaseTempleGate : Solid {
 	}
 #endregion
 
-	public void SetHeight(int height) {
+	public void SetHeightDOWN(int height) {
 		if ((float)height < base.Collider.Height)
 		{
 			base.Collider.Height = height;
+			base.Collider.Top = 0;
 			return;
 		}
 		float y = base.Y;
@@ -174,10 +174,48 @@ public class BaseTempleGate : Solid {
 		{
 			base.Y -= 64f - base.Collider.Height;
 			base.Collider.Height = 64f;
+			base.Collider.Top = 0;
 		}
 		MoveVExact(height - num);
 		base.Y = y;
 		base.Collider.Height = height;
+		base.Collider.Top = 0;
+	}
+
+	public void SetHeightUP(int height) {
+		if ((float)height < base.Collider.Height)
+		{
+			base.Collider.Height = height;
+			base.Collider.Bottom = 0;
+			return;
+		}
+		float y = base.Y;
+		int num = (int)base.Collider.Height;
+		if (base.Collider.Height < 64f)
+		{
+			base.Y += 64f - base.Collider.Height;
+			base.Collider.Height = 64f;
+			base.Collider.Bottom = 0;
+		}
+		MoveVExact(num - height);
+		base.Y = y;
+		base.Collider.Height = height;
+		base.Collider.Bottom = 0;
+
+
+	}
+	public void SetHeight(int height) {
+		switch (direction) {
+			case Direction.DOWN:
+				SetHeightDOWN(height);
+				break;
+			case Direction.UP:
+				SetHeightUP(height);
+				break;
+		}
+
+
+
 	}
 
 }
