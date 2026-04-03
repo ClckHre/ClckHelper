@@ -26,7 +26,7 @@ public class BaseTempleGate : Solid {
 	public BaseTempleGate(EntityData data, Vector2 offset) : base(data.Position + offset, 8f, 1, safe: true)
 	{
 		string spriteName = data.String("sprite", "TempleGate_default");
-		closedHeight = data.Int("height", 40);
+		closedHeight = data.Int("gate_height", 40);
 		inverted = data.Bool("inverted", false);
 		open_sound = data.String("open_sound", "event:/game/05_mirror_temple/gate_main_open");
 		close_sound = data.String("close_sound", "event:/game/05_mirror_temple/gate_main_close");
@@ -98,7 +98,6 @@ public class BaseTempleGate : Solid {
 	public void base_Open() {
 		Audio.Play(open_sound, Position);
 		drawHeightMoveSpeed = 200f;
-		//drawHeight = base.Height;
 		shaker.ShakeFor(0.2f, removeOnFinish: false);
 		SetHeight(0);
 		sprite.Play("open");
@@ -108,7 +107,6 @@ public class BaseTempleGate : Solid {
 	public void base_Close() {
 		Audio.Play(close_sound, Position);
 		drawHeightMoveSpeed = 300f;
-		//drawHeight = Math.Max(4f, base.Height);
 		shaker.ShakeFor(0.2f, removeOnFinish: false);
 		SetHeight(closedHeight);
 		sprite.Play("hit");
@@ -153,7 +151,6 @@ public class BaseTempleGate : Solid {
 	public override void Update()
 	{
 		base.Update();
-		Console.WriteLine($"Top is {base.Collider.Top}, Bottom is {base.Collider.Bottom}, AbsouluteBottom is {base.Collider.AbsoluteBottom}, Height is {base.Collider.Height}");
 		float num;
 		if (direction == Direction.DOWN || direction == Direction.UP) num = Math.Max(4f, base.Height);
 		else num = Math.Max(4f, base.Width);

@@ -32,7 +32,7 @@ FunctionGraphGate.placements = {
     name = "FunctionGraphGate",
     placementType = "point",
     data = {
-        height = 40,
+        gate_height = 40,
         sprite = "TempleGate_default"
     }
 }

@@ -32,7 +32,7 @@ EntityNearbyGate.placements = {
     name = "EntityNearbyGate",
     placementType = "point",
     data = {
-        height = 40,
+        gate_height = 40 = 40,
         sprite = "TempleGate_theo",
         SID="theoCrystal",
         open_radius=64,
