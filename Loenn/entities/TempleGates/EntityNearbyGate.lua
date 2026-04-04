@@ -1,8 +1,7 @@
 local drawableSprite = require("structs.drawable_sprite")
-local celesteEnums = require("consts.celeste_enums")
 local utils = require("utils")
 
-local EntityNearbyGate = {}
+local Gate = {}
 
 
 
@@ -14,46 +13,85 @@ local textures = {
 
 local textureOptions = {}
 
-
 for texture, _ in pairs(textures) do
     textureOptions[utils.titleCase(texture)] = texture
 end
 
-EntityNearbyGate.name = "ClckHelper/EntityNearbyGate"
-EntityNearbyGate.depth = -9000
-EntityNearbyGate.canResize = {false, false}
-EntityNearbyGate.fieldInformation = {
+local directionOptions = {
+    "DOWN",
+    "LEFT",
+    "UP",
+    "RIGHT"
+}
+
+
+
+Gate.name = "ClckHelper/EntityNearbyGate"
+Gate.depth = -9000
+Gate.canResize = {false, false}
+
+Gate.fieldOrder = {
+    "x", "y", "gate_height", "direction", "open_radius", "close_radius", "sprite", "SID", "inverted"
+}
+
+Gate.fieldInformation = {
     sprite = {
         options = textureOptions,
-        editable = true
+        editable = false
+    },
+    direction = {
+        options = directionOptions,
+        editable = false
     }
 }
-EntityNearbyGate.placements = {
-    name = "EntityNearbyGate",
+
+Gate.placements = {
+    name = "gate",
     placementType = "point",
     data = {
-        gate_height = 40 = 40,
-        sprite = "TempleGate_theo",
-        SID="theoCrystal",
+        gate_height = 40,
+        sprite = "TempleGate_default",
         open_radius=64,
         close_radius=80,
-        inverted=false
+        inverted=false,
+        direction="DOWN",
+        SID="theoCrystal",
     }
 }
 
 
 
-function EntityNearbyGate.sprite(room, entity)
+
+function Gate.sprite(room, entity)
+    local direction = entity.direction or "DOWN"
     local variant = entity.sprite or "default"
     local texture = textures[variant] or textures["default"]
     local sprite = drawableSprite.fromTexture(texture, entity)
-    local height = entity.height or 48
-
+    local height = entity.gate_height or 48
+    if direction == "UP" then
+        sprite.rotation = math.pi
+        sprite:addPosition(4, 48 - height)
+    elseif direction == "RIGHT" then
+        sprite.rotation = -math.pi/2
+        sprite:addPosition(height - 48, 4)
+    elseif direction == "LEFT" then
+        sprite.rotation = math.pi/2
+        sprite:addPosition(48 - height, 4)
+    else
+        sprite.rotation = 0
+        sprite:addPosition(4, height - 48)
+    end
     -- Weird offset from the code, justifications are from sprites.xml
     sprite:setJustification(0.5, 0.0)
-    sprite:addPosition(4, height - 48)
+    
 
     return sprite
 end
 
-return EntityNearbyGate
+return Gate
+
+
+
+
+
+

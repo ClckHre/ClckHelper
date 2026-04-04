@@ -1,8 +1,7 @@
 local drawableSprite = require("structs.drawable_sprite")
-local celesteEnums = require("consts.celeste_enums")
 local utils = require("utils")
 
-local InputTempleGate = {}
+local Gate = {}
 
 
 
@@ -14,6 +13,10 @@ local textures = {
 
 local textureOptions = {}
 
+for texture, _ in pairs(textures) do
+    textureOptions[utils.titleCase(texture)] = texture
+end
+
 local directionOptions = {
     "DOWN",
     "LEFT",
@@ -21,40 +24,46 @@ local directionOptions = {
     "RIGHT"
 }
 
-for texture, _ in pairs(textures) do
-    textureOptions[utils.titleCase(texture)] = texture
-end
 
-InputTempleGate.name = "ClckHelper/InputTempleGate"
-InputTempleGate.depth = -9000
-InputTempleGate.canResize = {false, false}
-InputTempleGate.fieldInformation = {
+
+Gate.name = "ClckHelper/InputTempleGate"
+Gate.depth = -9000
+Gate.canResize = {false, false}
+
+Gate.fieldOrder = {
+    "x", "y", "gate_height", "direction", "open_radius", "close_radius", "key", "controller_button", "sprite", "inverted"
+}
+
+Gate.fieldInformation = {
     sprite = {
         options = textureOptions,
-        editable = true
+        editable = false
     },
     direction = {
         options = directionOptions,
         editable = false
     }
 }
-InputTempleGate.placements = {
-    name = "InputTempleGate",
+
+Gate.placements = {
+    name = "gate",
     placementType = "point",
     data = {
         gate_height = 40,
         sprite = "TempleGate_default",
+        open_radius=64,
+        close_radius=80,
         inverted=false,
-        controller_button="Y",
+        direction="DOWN",      
         key="R",
-        direction="DOWN"
+        controller_button="Y",
     }
 }
 
 
 
 
-function InputTempleGate.sprite(room, entity)
+function Gate.sprite(room, entity)
     local direction = entity.direction or "DOWN"
     local variant = entity.sprite or "default"
     local texture = textures[variant] or textures["default"]
@@ -80,4 +89,4 @@ function InputTempleGate.sprite(room, entity)
     return sprite
 end
 
-return InputTempleGate
+return Gate
