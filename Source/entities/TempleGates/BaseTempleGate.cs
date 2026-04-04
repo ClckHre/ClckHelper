@@ -1,9 +1,7 @@
-using Celeste.Mod.Entities;
 using Monocle;
 using Microsoft.Xna.Framework;
 
 using System;
-using System.Runtime.CompilerServices;
 
 namespace Celeste.Mod.ClckHelper.Entities;
 
