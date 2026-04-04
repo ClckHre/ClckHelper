@@ -24,6 +24,14 @@ local directionOptions = {
     "RIGHT"
 }
 
+local inputOptions = {
+    "Jump",
+    "Dash",
+    "Grab",
+    "Talk",
+    "CrouchDash"
+}
+
 
 
 Gate.name = "ClckHelper/InputTempleGate"
@@ -31,7 +39,7 @@ Gate.depth = -9000
 Gate.canResize = {false, false}
 
 Gate.fieldOrder = {
-    "x", "y", "gate_height", "direction", "open_radius", "close_radius", "key", "controller_button", "sprite", "inverted"
+    "x", "y", "gate_height", "direction", "open_radius", "close_radius", "input", "sprite", "inverted"
 }
 
 Gate.fieldInformation = {
@@ -42,6 +50,10 @@ Gate.fieldInformation = {
     direction = {
         options = directionOptions,
         editable = false
+    },
+    input = {
+        options = inputOptions,
+        editable = true
     }
 }
 
@@ -55,8 +67,7 @@ Gate.placements = {
         close_radius=80,
         inverted=false,
         direction="DOWN",      
-        key="R",
-        controller_button="Y",
+        input="Grab",
     }
 }
 
